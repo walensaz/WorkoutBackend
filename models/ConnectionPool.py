@@ -10,7 +10,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 class ConnectionPool(metaclass=Singleton):
-    def __init__(self, pool_name="mypool", pool_size=15):
+    def __init__(self, pool_name="pool", pool_size=15):
         USER = os.getenv('USER')
         PASSWORD = os.getenv('PASSWORD')
         HOST = os.getenv('HOST')
@@ -20,7 +20,7 @@ class ConnectionPool(metaclass=Singleton):
             "password": PASSWORD,
             "host": HOST,
             "port": PORT,
-            "database": "workout_app",
+            "database": "fitness_progress_tracker",
         }
         self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(pool_name=pool_name, pool_size=pool_size, **dbconfig)
 

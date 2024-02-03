@@ -1,3 +1,4 @@
+import os
 import time
 
 from dotenv import load_dotenv
@@ -22,28 +23,25 @@ def create_app():
     CORS(app)
 
     # Needed dict format to pass vars in add_resource
-    db = {"connect": connect}
+    db = {"connect": connect("fitness_progress_tracker")}
 
     # for routes usage
     # app.register_blueprint(routes)
 
 
-
     # API endpoints and the associated class.
     # For per class usage
-    api.add_resource(resources.workouts.Workouts, '/workouts/user/')
+    api.add_resource(resources.workouts.Workouts, '/api/users')
 
     return app
 
 
 if __name__ == '__main__':
     app = create_app()
-    # app.run(debug=True, host="0.0.0.0")
-    while True:
-        try:
-            app.run(host='0.0.0.0.', threaded=True, debug=True, port=5000)
-        except Exception as e:
-            print("It happened")
-            time.sleep(5)
-    # serve(app, host='0.0.0.0', port=5000)
+    try:
+        # Run the server on localhost + other configurations.
+        app.run(host='localhost', threaded=True, debug=True, port=5000)
+    except Exception as e:
+        print(f"Error: {e}")
+
 
