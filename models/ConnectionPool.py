@@ -1,3 +1,4 @@
+from flask import jsonify
 import mysql.connector
 from mysql.connector import pooling
 import os
@@ -26,18 +27,18 @@ class ConnectionPool(metaclass=Singleton):
 
     def execute(self, query, params=None):
         cnx = self.cnxpool.get_connection()
-        cursor = cnx.cursor()
+        cursor = cnx.cursor(dictionary=True)
         try:
             # Pass the query and params to the execute method
             cursor.execute(query, params)
             # Fetch all the rows
-            result = cursor.fetchall()
+            rows = cursor.fetchall()
         except Exception as e:
             # Handle exceptions (e.g., log them, manage transaction if needed)
             print(f"Database execution error: {e}")
-            result = None
+            rows = None
         finally:
             # Ensure the connection is closed even if there is an error
             cnx.close()
-        return result
+        return rows
 

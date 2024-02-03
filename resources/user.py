@@ -4,31 +4,23 @@ from models.ConnectionPool import ConnectionPool
 class Users(Resource):
     def get(self):
         pool = ConnectionPool()
-        query = "SELECT * FROM user"
+        query = "SELECT user_id, email FROM user"
         results = pool.execute(query)
-        users = format_results(results)
-        return {'users': users}, 200
+        return {'users': results}, 200
 
 class UserById(Resource):
     def get(self, user_id):
         pool = ConnectionPool()
-        query = "SELECT * FROM user WHERE UserId = %s"
+        query = "SELECT user_id, email FROM user WHERE user_id = %s"
         results = pool.execute(query, (user_id,))
-        users = format_results(results)
-        if users and len(users) > 0:
-            return {'users': users}, 200
+        if len(results) == 1:
+            return {'users': results}, 200
+        elif len(results) == 0:
+            return {'message': f'User with UserID {user_id} not found'}, 404
         else:
-            return {'error': f'User with UserID {user_id} not found'}, 404
+            return {'message': 'Internal Server Error'}, 500
 
-def format_results(results):
-    users = []
-    for result in results:
-        user = {
-            'user_id': result[0],
-            'email': result[1],
-        }
-        users.append(user)
-    return users
+
         
 
     

@@ -3,11 +3,13 @@ import time
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_jwt_extended import JWTManager
 
 from flask_restful import Api
 from flask_cors import CORS
 
 import resources.user
+import resources.login
 from models.database import connect
 
 def create_app():
@@ -16,7 +18,11 @@ def create_app():
 
     # Initialize Flask
     app = Flask(__name__)
-    # Ease of access for restful API
+    # Secret key for JWT
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+    # Add JWTManager extension to the app
+    jwt = JWTManager(app)
+    # Add the API prefix to endpoints
     api = Api(app, prefix="/api")
     # Cross Origin Resource Sharing
     CORS(app)
@@ -26,6 +32,7 @@ def create_app():
 
     # API endpoints and the associated class.
     # Allow '/' at the end of the endpoint.
+    api.add_resource(resources.login.Login, '/login', '/login/')
     api.add_resource(resources.user.Users, '/users','/users/')
     api.add_resource(resources.user.UserById, '/users/<int:user_id>','/users/<int:user_id>/')
 

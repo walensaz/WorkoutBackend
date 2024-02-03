@@ -15,39 +15,40 @@ def seed():
     useDB = "USE fitness_progress_tracker;"
     pool.execute(useDB)
 
-    createUserTable = """CREATE TABLE user (
-                            UserID INT AUTO_INCREMENT PRIMARY KEY,
-                            Email VARCHAR(255) UNIQUE,
-                            PasswordHash VARCHAR(255)
+    create_user_table = """CREATE TABLE user (
+                            user_id INT AUTO_INCREMENT PRIMARY KEY,
+                            email VARCHAR(255) UNIQUE,
+                            password_hash VARCHAR(255)
                         );"""
-    pool.execute(createUserTable)
+    pool.execute(create_user_table)
 
-    createUserProfileTable = """CREATE TABLE user_profile (
-                                ProfileID INT AUTO_INCREMENT PRIMARY KEY,
-                                UserID INT,
-                                FirstName VARCHAR(255),
-                                LastName VARCHAR(255),
-                                Age INT,
-                                Gender VARCHAR(50),
-                                ProfileVisibility ENUM('PUBLIC', 'PRIVATE'),
-                                Bio TEXT,
-                                Avatar BLOB,
-                                FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+    create_user_profile_table = """CREATE TABLE user_profile (
+                                profile_id INT AUTO_INCREMENT PRIMARY KEY,
+                                user_id INT,
+                                first_name VARCHAR(255),
+                                last_name VARCHAR(255),
+                                age INT,
+                                gender VARCHAR(50),
+                                profile_visibility ENUM('PUBLIC', 'PRIVATE'),
+                                bio TEXT,
+                                avatar BLOB,
+                                FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
                             );"""
-    pool.execute(createUserProfileTable)
+    pool.execute(create_user_profile_table)
 
-    createRolesTable = """CREATE TABLE role (
-                            RoleID INT AUTO_INCREMENT PRIMARY KEY,
-                            RoleName VARCHAR(255)
+    create_roles_table = """CREATE TABLE role (
+                            role_id INT AUTO_INCREMENT PRIMARY KEY,
+                            role_name VARCHAR(255)
                         );"""
-    pool.execute(createRolesTable)
+    pool.execute(create_roles_table)
 
-    createUserRolesTable = """CREATE TABLE user_role (
-                              UserID INT,
-                              RoleID INT,
-                              FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE,
-                              FOREIGN KEY (RoleID) REFERENCES role(RoleID) ON DELETE CASCADE
+    create_user_roles_table = """CREATE TABLE user_role (
+                              user_id INT,
+                              role_id INT,
+                              PRIMARY KEY (user_id, role_id),
+                              FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+                              FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE CASCADE
                           );"""
-    pool.execute(createUserRolesTable)
+    pool.execute(create_user_roles_table)
 
 seed()

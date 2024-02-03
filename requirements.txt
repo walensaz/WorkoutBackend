@@ -3,3 +3,5 @@ flask_restful
 python-dotenv
 mysql-connector-python
 flask-cors
+flask-jwt-extended 
+bcrypt
