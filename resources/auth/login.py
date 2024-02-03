@@ -26,7 +26,7 @@ class Login(Resource):
             password_hash = result['rows'][0]['password_hash']
 
             if bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
-                access_token = create_access_token(identity={"email": email}, expires_delta=timedelta(seconds=60))
+                access_token = create_access_token(identity={"email": email}, expires_delta=timedelta(days=1))
                 return {'access_token': access_token}, 200
             else:
                 return {'message': 'Invalid credentials'}, 401

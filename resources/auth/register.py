@@ -24,5 +24,5 @@ class Register(Resource):
         if result['message']:
             return {'message': result['message']}, 500
 
-        access_token = create_access_token(identity={"email": email}, expires_delta=timedelta(seconds=60))
+        access_token = create_access_token(identity={"email": email}, expires_delta=timedelta(days=1))
         return {'access_token': access_token}, 200
