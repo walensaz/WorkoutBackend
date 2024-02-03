@@ -37,7 +37,6 @@ def create_app():
     api.add_resource(resources.auth.register.Register, '/register', '/register/')
     api.add_resource(resources.auth.login.Login, '/login', '/login/')
     api.add_resource(resources.user.Users, '/users','/users/')
-    api.add_resource(resources.user.UserById, '/users/<int:user_id>','/users/<int:user_id>/')
 
     return app
 

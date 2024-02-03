@@ -16,15 +16,14 @@ def seed():
     pool.execute(useDB)
 
     create_user_table = """CREATE TABLE user (
-                            user_id INT AUTO_INCREMENT PRIMARY KEY,
-                            email VARCHAR(255) UNIQUE,
+                            email VARCHAR(255) PRIMARY KEY,
                             password_hash VARCHAR(255)
                         );"""
     pool.execute(create_user_table)
 
     create_user_profile_table = """CREATE TABLE user_profile (
                                 profile_id INT AUTO_INCREMENT PRIMARY KEY,
-                                user_id INT,
+                                email VARCHAR(255),
                                 first_name VARCHAR(255),
                                 last_name VARCHAR(255),
                                 age INT,
@@ -32,7 +31,7 @@ def seed():
                                 profile_visibility ENUM('PUBLIC', 'PRIVATE'),
                                 bio TEXT,
                                 avatar BLOB,
-                                FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+                                FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
                             );"""
     pool.execute(create_user_profile_table)
 
@@ -43,10 +42,10 @@ def seed():
     pool.execute(create_roles_table)
 
     create_user_roles_table = """CREATE TABLE user_role (
-                              user_id INT,
+                              email VARCHAR(255),
                               role_id INT,
-                              PRIMARY KEY (user_id, role_id),
-                              FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+                              PRIMARY KEY (email, role_id),
+                              FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE,
                               FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE CASCADE
                           );"""
     pool.execute(create_user_roles_table)
