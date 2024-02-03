@@ -6,28 +6,29 @@ from datetime import timedelta
 
 class Login(Resource):
     def post(self):
-        try:
-            pool = ConnectionPool()
+        pool = ConnectionPool()
 
-            email = request.json.get('email')
-            password = request.json.get('password')
-            
-            if not email:
-                return 'Missing email', 400
-            if not password:
-                return 'Missing password', 400
-            
-            query = "SELECT * FROM user WHERE Email = %s"
-            results = pool.execute(query, (email,))
-            
-            if len(results) == 1:
-                user_id, hashed_password = results[0]
-                if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-                    access_token = create_access_token(identity={"email": email}, expires_delta=timedelta(seconds=60))
-                    return {'access_token': access_token}, 200
-                else:
-                    return {'message': 'Invalid credentials'}, 401
-            elif len(results) == 0:
-                return {'message': f'User with email {email} not found'}, 404
-        except Exception as e:
-            return {'message': f'Error: {e}'}, 500
+        email = request.json.get('email')
+        password = request.json.get('password')
+        
+        if not email:
+            return 'Missing field: email', 400
+        if not password:
+            return 'Missing field: password', 400
+        
+        query = "SELECT * FROM user WHERE Email = %s"
+        result = pool.execute(query, (email,))
+
+        if result['message']:
+            return {'message': result['message']}, 500
+        
+        if result['rows']:
+            password_hash = result['rows'][0]['password_hash']
+
+            if bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
+                access_token = create_access_token(identity={"email": email}, expires_delta=timedelta(seconds=60))
+                return {'access_token': access_token}, 200
+            else:
+                return {'message': 'Invalid credentials'}, 401
+        else:
+            return {'message': f'User with email {email} not found'}, 404

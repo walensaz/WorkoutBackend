@@ -26,19 +26,25 @@ class ConnectionPool(metaclass=Singleton):
         self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(pool_name=pool_name, pool_size=pool_size, **dbconfig)
 
     def execute(self, query, params=None):
+        rows = None
+        message = ""
+        
         cnx = self.cnxpool.get_connection()
         cursor = cnx.cursor(dictionary=True)
+
         try:
             # Pass the query and params to the execute method
             cursor.execute(query, params)
+            if query.lower().startswith(("insert", "update", "delete")):
+                # Commit the transaction
+                cnx.commit()
             # Fetch all the rows
             rows = cursor.fetchall()
         except Exception as e:
             # Handle exceptions (e.g., log them, manage transaction if needed)
-            print(f"Database execution error: {e}")
-            rows = None
+            message = f"Error: {e}"
         finally:
             # Ensure the connection is closed even if there is an error
             cnx.close()
-        return rows
+        return { "rows": rows, "message": message}
 
