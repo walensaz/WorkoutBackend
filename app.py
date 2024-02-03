@@ -8,8 +8,10 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 from flask_cors import CORS
 
+import resources.auth.login
+import resources.auth.register
 import resources.user
-import resources.login
+
 from models.database import connect
 
 def create_app():
@@ -32,7 +34,8 @@ def create_app():
 
     # API endpoints and the associated class.
     # Allow '/' at the end of the endpoint.
-    api.add_resource(resources.login.Login, '/login', '/login/')
+    api.add_resource(resources.auth.register.Register, '/register', '/register/')
+    api.add_resource(resources.auth.login.Login, '/login', '/login/')
     api.add_resource(resources.user.Users, '/users','/users/')
     api.add_resource(resources.user.UserById, '/users/<int:user_id>','/users/<int:user_id>/')
 
