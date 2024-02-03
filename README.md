@@ -1,0 +1,13 @@
+# FPT-Backend
+- In Visual Studio Code open the command palette (Ctrl+Shift+P).
+- Search for and select `Python: Create Environment`.
+- Select Venv, select your Python Version, and then select requirements.txt.
+- Then run `pip install -r requirements.txt`
+- I would recommend the Windows (x86, 64-bit), MSI Installer for each of the following:
+    - Make sure you have MySQL Server downloaded (https://dev.mysql.com/downloads/mysql/). 
+    - Make sure that you have MySQL Workbench downloaded (https://dev.mysql.com/downloads/workbench/) 
+- Insstall eacn and when you set up MySQL Workbench make sure you remember what password you use.
+- Then in the root directory make a file and name it `.env` and add your enviornment variabls
+    - (i.e. USER, PASSWORD, HOST, and PORT)
+- Then run seed.py()
+- You can then run app.py to get the server running.

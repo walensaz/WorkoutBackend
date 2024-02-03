@@ -7,9 +7,8 @@ from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
 
-import resources.workouts
+import resources.user
 from models.database import connect
-from routes import *
 
 def create_app():
     # Load env file
@@ -18,20 +17,17 @@ def create_app():
     # Initialize Flask
     app = Flask(__name__)
     # Ease of access for restful API
-    api = Api(app)
+    api = Api(app, prefix="/api")
     # Cross Origin Resource Sharing
     CORS(app)
 
     # Needed dict format to pass vars in add_resource
     db = {"connect": connect("fitness_progress_tracker")}
 
-    # for routes usage
-    # app.register_blueprint(routes)
-
-
     # API endpoints and the associated class.
-    # For per class usage
-    api.add_resource(resources.workouts.Workouts, '/api/users')
+    # Allow '/' at the end of the endpoint.
+    api.add_resource(resources.user.Users, '/users','/users/')
+    api.add_resource(resources.user.UserById, '/users/<int:user_id>','/users/<int:user_id>/')
 
     return app
 
