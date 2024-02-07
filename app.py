@@ -1,14 +1,18 @@
+import os
 import time
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_jwt_extended import JWTManager
 
 from flask_restful import Api
 from flask_cors import CORS
 
-import resources.workouts
+import resources.auth.login
+import resources.auth.register
+import resources.user
+
 from models.database import connect
-from routes import *
 
 def create_app():
     # Load env file
@@ -16,34 +20,33 @@ def create_app():
 
     # Initialize Flask
     app = Flask(__name__)
-    # Ease of access for restful API
-    api = Api(app)
+    # Secret key for JWT
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+    # Add JWTManager extension to the app
+    jwt = JWTManager(app)
+    # Add the API prefix to endpoints
+    api = Api(app, prefix="/api")
     # Cross Origin Resource Sharing
     CORS(app)
 
     # Needed dict format to pass vars in add_resource
-    db = {"connect": connect}
-
-    # for routes usage
-    # app.register_blueprint(routes)
-
-
+    db = {"connect": connect("fitness_progress_tracker")}
 
     # API endpoints and the associated class.
-    # For per class usage
-    api.add_resource(resources.workouts.Workouts, '/workouts/user/')
+    # Allow '/' at the end of the endpoint.
+    api.add_resource(resources.auth.register.Register, '/register', '/register/')
+    api.add_resource(resources.auth.login.Login, '/login', '/login/')
+    api.add_resource(resources.user.Users, '/users','/users/')
 
     return app
 
 
 if __name__ == '__main__':
     app = create_app()
-    # app.run(debug=True, host="0.0.0.0")
-    while True:
-        try:
-            app.run(host='0.0.0.0.', threaded=True, debug=True, port=5000)
-        except Exception as e:
-            print("It happened")
-            time.sleep(5)
-    # serve(app, host='0.0.0.0', port=5000)
+    try:
+        # Run the server on localhost + other configurations.
+        app.run(host='localhost', threaded=True, debug=True, port=5000)
+    except Exception as e:
+        print(f"Error: {e}")
+
 
