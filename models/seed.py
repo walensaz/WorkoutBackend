@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 def create_database():
     load_dotenv()
 
-    db_connection = connect("fitness_progress_tracker")
+    db_connection = connect()
     cursor = db_connection.cursor()
     cursor.execute("DROP DATABASE IF EXISTS fitness_progress_tracker;")
     cursor.execute("CREATE DATABASE fitness_progress_tracker;")
