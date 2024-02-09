@@ -7,9 +7,13 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 from flask_cors import CORS
 
-import resources.auth.login
-import resources.auth.register
-import resources.user
+import resources.auth.Login
+import resources.auth.ForgotPassword
+import resources.auth.Register
+import resources.Users
+
+from flask_mail import Mail
+from resources.utils.email import send_email
 
 from models.database import connect
 
@@ -19,12 +23,28 @@ def create_app():
 
     # Initialize Flask
     app = Flask(__name__)
+
+    # Flask-Mail configuration
+    app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+    app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 465))
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
     # Secret key for JWT
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+
+    # Initialize Flask-Mail
+    app.mail = Mail(app)
+
     # Add JWTManager extension to the app
     jwt = JWTManager(app)
+
     # Add the API prefix to endpoints
     api = Api(app, prefix="/api")
+
     # Cross Origin Resource Sharing
     CORS(app)
 
@@ -33,16 +53,18 @@ def create_app():
 
     # API endpoints and the associated class.
     # Allow '/' at the end of the endpoint.
-    api.add_resource(resources.auth.register.Register, '/register', '/register/')
-    api.add_resource(resources.auth.login.Login, '/login', '/login/')
-    api.add_resource(resources.user.Users, '/users','/users/')
+    api.add_resource(resources.auth.Register.Register, '/register', '/register/')
+    api.add_resource(resources.auth.Login.Login, '/login', '/login/')
+    api.add_resource(resources.auth.ForgotPassword.ForgotPassword, '/forgot-password', '/forgot-password/')
+    api.add_resource(resources.Users.Users, '/users','/users/')
 
     return app
 
-
 if __name__ == '__main__':
     app = create_app()
+
     try:
+        # send_email(app, app.mail, 'Test Email', ['hanso233@uwm.edu'], 'This is a test email from Flask app using Outlook.')
         # Run the server on localhost + other configurations.
         app.run(host='localhost', threaded=True, debug=True, port=5000)
     except Exception as e:

@@ -1,4 +1,4 @@
-from ConnectionPool import ConnectionPool
+from models.ConnectionPool import ConnectionPool
 from database import connect
 from dotenv import load_dotenv
 
