@@ -30,7 +30,7 @@ class ForgotPassword(Resource):
             reset_token = create_access_token(identity=email, expires_delta=expires)
 
             # Create reset URL
-            reset_url = url_for('resetpassword', token=reset_token, _external=True)
+            reset_url = f"http://localhost:3000/reset-password/{reset_token}"
             body = f"To reset your password, click the following link: {reset_url}"
 
             # Send email
