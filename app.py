@@ -14,7 +14,6 @@ import resources.auth.Register
 import resources.Users
 
 from flask_mail import Mail
-from resources.utils.email import send_email
 
 from models.database import connect
 
