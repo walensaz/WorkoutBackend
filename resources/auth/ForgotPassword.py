@@ -8,6 +8,8 @@ from models.ConnectionPool import ConnectionPool
 
 class ForgotPassword(Resource):
     def post(self):
+        pool = ConnectionPool()
+
         subject = 'Password Reset Request'
         email = request.json.get('email')
 
@@ -15,6 +17,14 @@ class ForgotPassword(Resource):
             return {'message': 'Missing field: email'}, 400
 
         try:
+            query = "SELECT COUNT(*) FROM user WHERE email = %s"
+            result = pool.execute(query, (email,))
+
+            # Check if user exists before actually sending an email, if they don't exist
+            # We pretend we sent the email (Security)
+            if 'rows' not in result or result['rows'] == 0:
+                return {'message': f'Password reset email sent to {email}'}, 201
+
             # Generate reset token
             expires = datetime.timedelta(hours=1)
             reset_token = create_access_token(identity=email, expires_delta=expires)

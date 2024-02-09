@@ -6,7 +6,7 @@ class Users(Resource):
     def get(self):
         pool = ConnectionPool()
 
-        email = request.args.get('email') 
+        email = request.args.get('email')
         
         if email: # If email is not None, then we want to get the user with that email
             query = "SELECT email FROM user WHERE email = %s"
@@ -14,7 +14,7 @@ class Users(Resource):
 
             if result['message']:
                 return {'message': result['message']}, 500
-            
+
             if result['rows']:
                 return {'users': result["rows"]}, 200
             else:
@@ -25,5 +25,5 @@ class Users(Resource):
 
             if result['message']:
                 return {'message': result['message']}, 500
-            
+
             return {'users': result["rows"]}, 200
