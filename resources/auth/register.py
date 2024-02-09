@@ -12,9 +12,9 @@ class Register(Resource):
         password = request.json.get('password')
         
         if not email:
-            return 'Missing field: email', 400
+            return {'message': 'Missing field: email'}, 400
         if not password:
-            return 'Missing field: password', 400
+            return {'message': 'Missing field: password'}, 400
         
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 

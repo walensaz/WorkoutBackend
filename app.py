@@ -9,6 +9,7 @@ from flask_cors import CORS
 
 import resources.auth.Login
 import resources.auth.ForgotPassword
+import resources.auth.ResetPassword
 import resources.auth.Register
 import resources.Users
 
@@ -56,6 +57,7 @@ def create_app():
     api.add_resource(resources.auth.Register.Register, '/register', '/register/')
     api.add_resource(resources.auth.Login.Login, '/login', '/login/')
     api.add_resource(resources.auth.ForgotPassword.ForgotPassword, '/forgot-password', '/forgot-password/')
+    api.add_resource(resources.auth.ResetPassword.ResetPassword, '/reset-password/<token>', '/reset-password/<token>/')
     api.add_resource(resources.Users.Users, '/users','/users/')
 
     return app
@@ -64,7 +66,6 @@ if __name__ == '__main__':
     app = create_app()
 
     try:
-        # send_email(app, app.mail, 'Test Email', ['hanso233@uwm.edu'], 'This is a test email from Flask app using Outlook.')
         # Run the server on localhost + other configurations.
         app.run(host='localhost', threaded=True, debug=True, port=5000)
     except Exception as e:
