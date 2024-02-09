@@ -27,8 +27,3 @@ class Users(Resource):
                 return {'message': result['message']}, 500
             
             return {'users': result["rows"]}, 200
-
-        
-
-    
-

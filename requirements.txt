@@ -5,3 +5,4 @@ mysql-connector-python
 flask-cors
 flask-jwt-extended 
 bcrypt
+Flask-Mail
