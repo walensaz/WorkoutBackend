@@ -75,6 +75,7 @@ def seed():
                                 email VARCHAR(255),
                                 name VARCHAR(255),
                                 description TEXT,
+                                routine_visibility ENUM('PUBLIC', 'PRIVATE'),
                                 FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
                            );"""
     pool.execute(create_routine_table)
