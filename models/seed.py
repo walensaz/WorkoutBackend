@@ -96,7 +96,7 @@ def seed():
                                         routine_log_id INT AUTO_INCREMENT PRIMARY KEY,
                                         routine_id INT,
                                         date DATE,
-                                        completion_status VARCHAR(255),
+                                        completion_status BIT,
                                         FOREIGN KEY (routine_id) REFERENCES routine(routine_id) ON DELETE CASCADE
                                 );"""
     pool.execute(create_routine_log_table)
