@@ -31,3 +31,6 @@ def app():
 def client(app):
     return app.test_client()
 
+def sqlResponse(rows, message):
+    return {'rows': rows, 'message': message}
+
