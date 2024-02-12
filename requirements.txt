@@ -7,3 +7,4 @@ flask-jwt-extended
 bcrypt
 Flask-Mail
 pytest
+sqlparse
