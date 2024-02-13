@@ -14,7 +14,7 @@ class ResetPassword(Resource):
         try:
             # Decode the token manually to validate and extract information
             decoded_token = decode_token(token)
-            user_email = decoded_token.get('sub', {}).get('email')
+            user_email = decoded_token.get('sub', {})
 
             if user_email:
                 # Hash the new password

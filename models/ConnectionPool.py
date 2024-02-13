@@ -1,7 +1,6 @@
-from flask import jsonify
 import mysql.connector
-from mysql.connector import pooling
 import os
+from unittest.mock import MagicMock
 
 class Singleton(type):
     _instances = {}
@@ -11,7 +10,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 class ConnectionPool(metaclass=Singleton):
-    def __init__(self, pool_name="pool", pool_size=15):
+    def __init__(self, database="fitness_progress_tracker", pool_name="pool", pool_size=15, testEffects=None):
         USER = os.getenv('USER')
         PASSWORD = os.getenv('PASSWORD')
         HOST = os.getenv('HOST')
@@ -21,9 +20,14 @@ class ConnectionPool(metaclass=Singleton):
             "password": PASSWORD,
             "host": HOST,
             "port": PORT,
-            "database": "fitness_progress_tracker",
+            "database": database,
         }
-        self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(pool_name=pool_name, pool_size=pool_size, **dbconfig)
+
+        if testEffects:
+            self.cnxpool = MagicMock()
+            self.execute = MagicMock(side_effect=testEffects)
+        else:
+            self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(pool_name=pool_name, pool_size=pool_size, **dbconfig)
 
     def execute(self, query, params=None):
         rows = None
@@ -46,5 +50,5 @@ class ConnectionPool(metaclass=Singleton):
         finally:
             # Ensure the connection is closed even if there is an error
             cnx.close()
-        return { "rows": rows, "message": message}
+        return {"rows": rows, "message": message}
 

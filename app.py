@@ -12,9 +12,10 @@ import resources.auth.ForgotPassword
 import resources.auth.ResetPassword
 import resources.auth.Register
 import resources.Users
+import resources.ExerciseDetail
+import resources.RoutineDetail
 
 from flask_mail import Mail
-from resources.utils.email import send_email
 
 from models.database import connect
 
@@ -59,6 +60,8 @@ def create_app():
     api.add_resource(resources.auth.ForgotPassword.ForgotPassword, '/forgot-password', '/forgot-password/')
     api.add_resource(resources.auth.ResetPassword.ResetPassword, '/reset-password/<token>', '/reset-password/<token>/')
     api.add_resource(resources.Users.Users, '/users','/users/')
+    api.add_resource(resources.ExerciseDetail.ExerciseDetail,'/exercise-details/<exercise_id>', '/exercise-details/<exercise_id>/')
+    api.add_resource(resources.RoutineDetail.RoutineDetail,'/routine-details/<routine_id>', '/routine-details/<routine_id>/')
 
     return app
 
