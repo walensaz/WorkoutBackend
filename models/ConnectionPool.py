@@ -50,5 +50,5 @@ class ConnectionPool(metaclass=Singleton):
         finally:
             # Ensure the connection is closed even if there is an error
             cnx.close()
-        return { "rows": rows, "message": message}
+        return {"rows": rows, "message": message}
 
