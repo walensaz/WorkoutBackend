@@ -1,7 +1,9 @@
+import pytest
 from models.ConnectionPool import ConnectionPool
-from tests.conftest import app, client, sqlResponse
+from tests.conftest import app, client
 
-def test_register(client):
+@pytest.fixture
+def mock_connection_pool(monkeypatch):
     def side_effects(*args, **kwargs):
         if args[0] == 'INSERT INTO user (email, password_hash) VALUES (%s, %s)':
             if args[1] == ('dc@gmail.com',):
@@ -10,14 +12,22 @@ def test_register(client):
                 return {'rows': [], 'message': ""}
         else:
             return {'rows': [], 'message': ""}
+
     ConnectionPool(testEffects=side_effects)
-    # response = client.post("/api/login", json={""})
-    # assert response.status_code == 400
-    response = client.post("/api/register", json={"email": "dc@gmail.com"})
-    assert response.status_code == 400
+
+def test_register_missing_email(client, mock_connection_pool):
     response = client.post("/api/register", json={"firstName": "Zach", "lastName": "Wal", "password": "password"})
     assert response.status_code == 400
     assert response.json['message'] == "Missing field: email"
+
+def test_register_missing_other_fields(client, mock_connection_pool):
+    # Example for missing password, similar tests can be added for other fields
+    response = client.post("/api/register", json={"email": "dc@gmail.com", "firstName": "Zach", "lastName": "Wal"})
+    assert response.status_code == 400
+    # Assuming the API returns a general message for missing fields
+    assert "Missing field" in response.json['message']
+
+def test_register_successful(client, mock_connection_pool):
     response = client.post("/api/register", json={"firstName": "Zach", "lastName": "Wal", 'email': "dc@gmail.com", "password": "Sachinfromgeekpython"})
     assert response.status_code == 200
     assert response.json['token'] is not None

@@ -13,8 +13,9 @@ from models.ConnectionPool import Singleton
 # Prevent interferience between tests by resetting the singleton after each test
 @pytest.fixture(autouse=True)  
 def reset_singleton():
-    yield
     Singleton.reset_instances()
+    yield
+    
 
 @pytest.fixture(scope="function")
 def app():
