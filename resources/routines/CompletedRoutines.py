@@ -3,6 +3,9 @@ from flask_restful import Resource, request
 from models.ConnectionPool import ConnectionPool
 import calendar
 
+from resources.utils.date_formatter import convert_date
+from resources.utils.typescript_formatter import convert_keys
+
 class CompletedRoutines(Resource):
     @jwt_required()
     def get(self):
@@ -48,7 +51,8 @@ class CompletedRoutines(Resource):
 
             # Check if there are rows returned
             if result['rows']:
-                return {'completedRoutines': result["rows"]}, 200
+                completed_routines = list(map(convert_date, convert_keys(result["rows"])))
+                return completed_routines, 200
             else:
                 return {'message': 'No completed routines found for the specified month and year'}, 404
         except Exception as e:
