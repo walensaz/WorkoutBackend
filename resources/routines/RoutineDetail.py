@@ -1,13 +1,15 @@
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from models.ConnectionPool import ConnectionPool
-from resources.TypeScriptFormatter import convert_keys
+from resources.utils.typescript_formatter import convert_keys
 
 class RoutineDetail(Resource):
+    @jwt_required
     def get(self, routine_id):
         pool = ConnectionPool()
 
         if not routine_id:
-            return {'message': 'Missing field: routine_id'}, 400
+            return {'message': 'Missing route component: routine_id'}, 400
 
         try:
             query = ("SELECT routine_exercise.*, routine.name as routine_name, routine.description, exercise.name as exercise_name FROM routine_exercise "

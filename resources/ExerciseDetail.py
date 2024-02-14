@@ -1,13 +1,13 @@
 from flask_restful import Resource
 from models.ConnectionPool import ConnectionPool
-from resources.TypeScriptFormatter import convert_keys
+from resources.utils.typescript_formatter import convert_keys
 
 class ExerciseDetail(Resource):
     def get(self, exercise_id):
         pool = ConnectionPool()
 
         if not exercise_id:
-            return {'message': 'Missing field: exercise_id'}, 400
+            return {'message': 'Missing route component: exercise_id'}, 400
 
         try:
             query = "SELECT * FROM exercise WHERE exercise_id = %s"

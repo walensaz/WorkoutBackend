@@ -13,7 +13,8 @@ import resources.auth.ResetPassword
 import resources.auth.Register
 import resources.Users
 import resources.ExerciseDetail
-import resources.RoutineDetail
+import resources.routines.RoutineDetail
+import resources.routines.CompletedRoutines
 
 from flask_mail import Mail
 
@@ -61,7 +62,8 @@ def create_app():
     api.add_resource(resources.auth.ResetPassword.ResetPassword, '/reset-password/<token>', '/reset-password/<token>/')
     api.add_resource(resources.Users.Users, '/users','/users/')
     api.add_resource(resources.ExerciseDetail.ExerciseDetail,'/exercise-details/<exercise_id>', '/exercise-details/<exercise_id>/')
-    api.add_resource(resources.RoutineDetail.RoutineDetail,'/routine-details/<routine_id>', '/routine-details/<routine_id>/')
+    api.add_resource(resources.routines.RoutineDetail.RoutineDetail,'/routine-details/<routine_id>', '/routine-details/<routine_id>/')
+    api.add_resource(resources.routines.CompletedRoutines.CompletedRoutines, '/completed-routines', '/completed-routines/')
 
     return app
 

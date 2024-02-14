@@ -3,12 +3,20 @@ import pytest
 import sqlparse
 
 from app import create_app
+from models.ConnectionPool import Singleton
 
 
 # https://flask.palletsprojects.com/en/3.0.x/testing/
 # https://www.youtube.com/watch?v=RLKW7ZMJOf4
 
-@pytest.fixture()
+# Use autouse=True to automatically apply this fixture to each test
+# Prevent interferience between tests by resetting the singleton after each test
+@pytest.fixture(autouse=True)  
+def reset_singleton():
+    yield
+    Singleton.reset_instances()
+
+@pytest.fixture(scope="function")
 def app():
     os.environ['USER'] = 'Test'
     os.environ['PASSWORD'] = 'Test'
@@ -28,7 +36,7 @@ def app():
     # clean up / reset resources here
 
 
-@pytest.fixture()
+@pytest.fixture(scope='function')
 def client(app):
     return app.test_client()
 

@@ -1,5 +1,5 @@
 from models.ConnectionPool import ConnectionPool
-from conftest import sqlResponse
+from tests.conftest import app, client, sqlResponse
 
 def test_user(client):
     def side_effects(*args, **kwargs):

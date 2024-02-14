@@ -2,7 +2,7 @@ import datetime
 from flask_jwt_extended import create_access_token
 from flask_restful import Resource, request
 from flask_mail import Message
-from flask import current_app, url_for
+from flask import current_app
 
 from models.ConnectionPool import ConnectionPool
 
@@ -17,13 +17,13 @@ class ForgotPassword(Resource):
             return {'message': 'Missing field: email'}, 400
 
         try:
-            query = "SELECT COUNT(*) FROM user WHERE email = %s"
+            query = "SELECT email FROM user WHERE email = %s"
             result = pool.execute(query, (email,))
 
             # Check if user exists before actually sending an email, if they don't exist
             # We pretend we sent the email (Security)
-            if 'rows' not in result or result['rows'] == 0:
-                return {'message': f'Password reset email sent to {email}'}, 201
+            if 'rows' not in result or len(result['rows']) == 0:
+                return {'message': f'Password reset email sent to {email}'}, 200
 
             # Generate reset token
             expires = datetime.timedelta(hours=1)

@@ -16,7 +16,7 @@ class Login(Resource):
         if not password:
             return {'message': 'Missing field: password'}, 400
         
-        query = "SELECT * FROM user WHERE Email = %s"
+        query = "SELECT * FROM user WHERE email = %s"
         result = pool.execute(query, (email,))
 
         if result['message']:
@@ -30,5 +30,5 @@ class Login(Resource):
                 return {'token': access_token}, 200
             else:
                 return {'message': 'Invalid credentials'}, 401
-        else:
-            return {'message': f'User with email {email} not found'}, 404
+        else: # No user found
+            return {'message': 'Invalid credentials'}, 401
