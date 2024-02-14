@@ -1,3 +1,8 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from models import ConnectionPool
+from conftest import sqlResponse
 import pytest
 from models.ConnectionPool import ConnectionPool
 from tests.conftest import app, client
