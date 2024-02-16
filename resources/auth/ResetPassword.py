@@ -13,6 +13,7 @@ class ResetPassword(Resource):
         
         try:
             # Decode the token manually to validate and extract information
+            # decode_token throws an error if the token is expired, no need to manually validate expiration.
             decoded_token = decode_token(token)
             user_email = decoded_token.get('sub', {})
 

@@ -1,6 +1,6 @@
 import pytest
 from models.ConnectionPool import ConnectionPool
-from tests.conftest import app, client
+from tests.conftest import client
 
 @pytest.fixture
 def mock_connection_pool(monkeypatch):

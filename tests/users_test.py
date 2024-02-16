@@ -1,6 +1,6 @@
 import pytest
 from models.ConnectionPool import ConnectionPool
-from tests.conftest import app, client, execute_side_effects, sqlResponse
+from tests.conftest import client, sqlResponse
 
 @pytest.fixture
 def mock_connection_pool_with_users(monkeypatch):
