@@ -54,7 +54,7 @@ class CompletedRoutines(Resource):
 
         try:
             # Define the query
-            query = """SELECT rl.routine_log_id, r.name, r.description, rl.date, rl.completion_status
+            query = """SELECT rl.routine_log_id, r.routine_id, r.name, r.description, rl.date, rl.completion_status
                        FROM routine r
                        INNER JOIN routine_log rl ON r.routine_id = rl.routine_id
                        WHERE r.email = %s AND rl.date BETWEEN %s AND %s
