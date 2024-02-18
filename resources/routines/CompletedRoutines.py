@@ -30,10 +30,27 @@ class CompletedRoutines(Resource):
         except ValueError as e:
             return {'message': f'Invalid parameter values: {e}'}, 400
         
-        # Calculate the last day of the month for the given year and month
-        last_day = calendar.monthrange(year, month)[1]
-        start_date = f"{year}-{month:02d}-01"
-        end_date = f"{year}-{month:02d}-{last_day}"
+        # Calculate the previous month and year
+        prev_month = month - 1
+        prev_month_year = year
+        if prev_month == 0:
+            prev_month = 12
+            prev_month_year -= 1
+        
+        # Calculate the next month and year
+        next_month = month + 1
+        next_month_year = year
+        if next_month == 13:
+            next_month = 1
+            next_month_year += 1
+        
+        # Calculate the last day of the next month
+        last_day_next_month = calendar.monthrange(next_month_year, next_month)[1]
+        
+        # Adjust start_date to be the first day of the previous month
+        start_date = f"{prev_month_year}-{prev_month:02d}-01"
+        # Adjust end_date to be the last day of the next month
+        end_date = f"{next_month_year}-{next_month:02d}-{last_day_next_month}"
 
         try:
             # Define the query
