@@ -4,7 +4,7 @@ from models.ConnectionPool import ConnectionPool
 from resources.utils.typescript_formatter import convert_keys
 
 class RoutineDetail(Resource):
-    @jwt_required
+    @jwt_required()
     def get(self, routine_id):
         pool = ConnectionPool()
 
@@ -24,6 +24,25 @@ class RoutineDetail(Resource):
             if result['message']:
                 return {'message': result['message']}, 500
 
-            return convert_keys(result["rows"]), 200
+            response = {
+                'routine_id': result["rows"][0]["routine_id"],
+                'name': result["rows"][0]["routine_name"],
+                'description': result["rows"][0]["description"],
+                'exercises': []
+            }
+            exercises = []
+            for row in result["rows"]:
+                exercise = {
+                    'exercise_id': row["exercise_id"],
+                    'name': row["exercise_name"],
+                    'sets': row["sets"],
+                    'order': row["order"],
+                    'repetitions': row["repetitions"],
+                    'resting_time': row["resting_time"]
+                }
+                exercises.append(exercise)
+            response['exercises'] = exercises
+
+            return convert_keys(response), 200
         except Exception as e:
             return {'message': f'Failed. Error: {e}'}, 500
