@@ -38,6 +38,7 @@ class ConnectionPool(metaclass=Singleton):
     def execute(self, query, params=None):
         rows = None
         message = ""
+        affected = 0
         
         cnx = self.cnxpool.get_connection()
         cursor = cnx.cursor(dictionary=True)
@@ -50,11 +51,13 @@ class ConnectionPool(metaclass=Singleton):
                 cnx.commit()
             # Fetch all the rows
             rows = cursor.fetchall()
+            # Count affected rows
+            affected = cursor.rowcount
         except Exception as e:
             # Handle exceptions (e.g., log them, manage transaction if needed)
             message = f"Error: {e}"
         finally:
             # Ensure the connection is closed even if there is an error
             cnx.close()
-        return {"rows": rows, "message": message}
+        return {"rows": rows, "message": message, "affected": affected}
 

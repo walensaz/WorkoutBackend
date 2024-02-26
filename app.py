@@ -15,6 +15,7 @@ import resources.Users
 import resources.ExerciseDetail
 import resources.routines.RoutineDetail
 import resources.routines.CompletedRoutines
+import resources.routines.ModifyRoutines
 
 from flask_mail import Mail
 
@@ -56,14 +57,62 @@ def create_app():
 
     # API endpoints and the associated class.
     # Allow '/' at the end of the endpoint.
-    api.add_resource(resources.auth.Register.Register, '/register', '/register/')
-    api.add_resource(resources.auth.Login.Login, '/login', '/login/')
-    api.add_resource(resources.auth.ForgotPassword.ForgotPassword, '/forgot-password', '/forgot-password/')
-    api.add_resource(resources.auth.ResetPassword.ResetPassword, '/reset-password/<token>', '/reset-password/<token>/')
-    api.add_resource(resources.Users.Users, '/users','/users/')
-    api.add_resource(resources.ExerciseDetail.ExerciseDetail,'/exercise-details/<exercise_id>', '/exercise-details/<exercise_id>/')
-    api.add_resource(resources.routines.RoutineDetail.RoutineDetail,'/routine-details/<routine_id>', '/routine-details/<routine_id>/')
-    api.add_resource(resources.routines.CompletedRoutines.CompletedRoutines, '/completed-routines', '/completed-routines/')
+    api.add_resource(
+        resources.auth.Register.Register, 
+        '/register', 
+        '/register/'
+    )
+
+    api.add_resource(
+        resources.auth.Login.Login, 
+        '/login', 
+        '/login/'
+    )
+
+    api.add_resource(
+        resources.auth.ForgotPassword.ForgotPassword, 
+        '/forgot-password', 
+        '/forgot-password/'
+    )
+
+    api.add_resource(
+        resources.auth.ResetPassword.ResetPassword, 
+        '/reset-password/<token>', 
+        '/reset-password/<token>/'
+    )
+
+    api.add_resource(
+        resources.Users.Users, 
+        '/users',
+        '/users/'
+    )
+
+    api.add_resource(
+        resources.ExerciseDetail.ExerciseDetail,
+        '/exercise-details/<exercise_id>', 
+        '/exercise-details/<exercise_id>/'
+    )
+
+    api.add_resource(
+        resources.routines.RoutineDetail.RoutineDetail,
+        '/routine-details/<routine_id>', 
+        '/routine-details/<routine_id>/'
+    )
+
+    
+    api.add_resource(
+        resources.routines.CompletedRoutines.CompletedRoutines, 
+        '/completed-routines', 
+        '/completed-routines/'
+    )
+
+    api.add_resource(
+        resources.routines.ModifyRoutines.ModifyRoutines, 
+        '/modify-routines', 
+        '/modify-routines/',
+        '/modify-routines/<routine_id>',
+        '/modify-routines/<routine_id1>/'
+    )
 
     return app
 

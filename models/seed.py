@@ -38,7 +38,7 @@ def seed():
                                     last_name VARCHAR(255),
                                     age INT,
                                     gender VARCHAR(50),
-                                    profile_visibility ENUM('PUBLIC', 'PRIVATE'),
+                                    visibility ENUM('PUBLIC', 'PRIVATE'),
                                     bio TEXT,
                                     avatar BLOB,
                                     FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
@@ -76,7 +76,7 @@ def seed():
                                 email VARCHAR(255),
                                 name VARCHAR(255),
                                 description TEXT,
-                                routine_visibility ENUM('PUBLIC', 'PRIVATE'),
+                                visibility ENUM('PUBLIC', 'PRIVATE'),
                                 created DATE,
                                 FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
                            );"""
@@ -110,7 +110,7 @@ def seed():
                                     email VARCHAR(255),
                                     name VARCHAR(255),
                                     description TEXT,
-                                    training_plan_visibility ENUM('PUBLIC', 'PRIVATE'),
+                                    visibility ENUM('PUBLIC', 'PRIVATE'),
                                     created DATE,
                                     FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
                                 );"""
