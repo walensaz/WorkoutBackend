@@ -13,6 +13,7 @@ class ModifyRoutines(Resource):
         name = data.get('name')
         description = data.get('description')
         visibility = data.get('visibility')
+        exercises = data.get('exercises')
         created = datetime.datetime.now().strftime('%Y-%m-%d')
 
         if not name:
@@ -21,11 +22,39 @@ class ModifyRoutines(Resource):
             return {'message': 'Missing field: description'}, 400
         if not visibility:
             return {'message': 'Missing field: visibility'}, 400
+        if not exercises:
+            return {'message': 'Missing field: exercises'}, 400
 
         try:
             query = """INSERT INTO routine (email, name, description, visibility, created) 
                     VALUES (%s, %s, %s, %s, %s);"""
             result = pool.execute(query, (email, name, description, visibility, created))
+
+            routine_id = result['last_insert_id']
+
+            for exercise in exercises:
+                if not exercise.get('exerciseId'):
+                    return {'message': 'Missing field: exerciseId'}, 400
+                if not exercise.get('order'):
+                    return {'message': 'Missing field: order'}, 400
+                if not exercise.get('repetitions'):
+                    return {'message': 'Missing field: repetitions'}, 400
+                if not exercise.get('sets'):
+                    return {'message': 'Missing field: sets'}, 400
+                if not exercise.get('restingTime'):
+                    return {'message': 'Missing field: restingTime'}, 400
+
+                query = """INSERT INTO routine_exercise (routine_id, exercise_id, `order`, repetitions, sets, resting_time)
+                        VALUES (%s, %s, %s, %s, %s, %s);"""
+
+                result = pool.execute(query, (
+                    routine_id, 
+                    exercise['exerciseId'], 
+                    exercise['order'], 
+                    exercise['repetitions'], 
+                    exercise['sets'], 
+                    exercise['restingTime']
+                ))
 
             if result['message']:
                 return {'message': result['message']}, 500
@@ -33,7 +62,6 @@ class ModifyRoutines(Resource):
             return {'message': 'Routine added successfully'}, 201
         except Exception as e:
             return {'message': f'Error adding routine: {e}'}, 500
-
 
     @jwt_required()
     def put(self, routine_id):
@@ -44,6 +72,7 @@ class ModifyRoutines(Resource):
         name = data.get('name')
         description = data.get('description')
         visibility = data.get('visibility')
+        exercises = data.get('exercises')
 
         if not name:
             return {'message': 'Missing field: name'}, 400
@@ -51,14 +80,48 @@ class ModifyRoutines(Resource):
             return {'message': 'Missing field: description'}, 400
         if not visibility:
             return {'message': 'Missing field:: visibility'}, 400
+        if not exercises:
+            return {'message': 'Missing field: exercises'}, 400
 
         try:
+            query = "SELECT * FROM routine WHERE routine_id = %s AND email = %s;"
+            result = pool.execute(query, (routine_id, email))
+
+            if not result['rows']:
+                return {'message': 'No routine found to update'}, 404
+            
             query = """UPDATE routine SET name = %s, description = %s, visibility = %s
                     WHERE routine_id = %s AND email = %s;"""
             result = pool.execute(query, (name, description, visibility, routine_id, email))
+            
+            # The new exercises will replace the old ones and this allows the list to
+            # include new exercises, remove old ones, and update existing ones.
+            query = "DELETE FROM routine_exercise WHERE routine_id = %s;"
+            result = pool.execute(query, (routine_id,))
 
-            if result['affected'] == 0:
-                return {'message': 'No changes were made - ensure routine exists and new values have been provided'}, 500
+            for exercise in exercises:
+                if not exercise.get('exerciseId'):
+                    return {'message': 'Missing field: exerciseId'}, 400
+                if not exercise.get('order'):
+                    return {'message': 'Missing field: order'}, 400
+                if not exercise.get('repetitions'):
+                    return {'message': 'Missing field: repetitions'}, 400
+                if not exercise.get('sets'):
+                    return {'message': 'Missing field: sets'}, 400
+                if not exercise.get('restingTime'):
+                    return {'message': 'Missing field: restingTime'}, 400
+                
+                query = """INSERT INTO routine_exercise (routine_id, exercise_id, `order`, repetitions, sets, resting_time)
+                        VALUES (%s, %s, %s, %s, %s, %s);"""
+                
+                result = pool.execute(query, (
+                    routine_id, 
+                    exercise['exerciseId'], 
+                    exercise['order'], 
+                    exercise['repetitions'], 
+                    exercise['sets'], 
+                    exercise['restingTime']
+                ))
             
             if result['message']:
                 return {'message': result['message']}, 500
@@ -70,7 +133,6 @@ class ModifyRoutines(Resource):
 
     @jwt_required()
     def delete(self, routine_id):
-        # Delete a routine
         pool = ConnectionPool()
         email = get_jwt_identity().get('email')
 

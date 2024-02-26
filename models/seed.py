@@ -104,7 +104,6 @@ def seed():
                                 );"""
     pool.execute(create_routine_log_table)
 
-    # New tables
     create_training_plan_table = """CREATE TABLE training_plan (
                                     plan_id INT AUTO_INCREMENT PRIMARY KEY,
                                     email VARCHAR(255),
@@ -116,16 +115,17 @@ def seed():
                                 );"""
     pool.execute(create_training_plan_table)
 
-    create_routine_in_plan_table = """CREATE TABLE routine_in_plan (
+    create_routine_training_plan_table = """CREATE TABLE routine_training_plan (
                                       id INT AUTO_INCREMENT PRIMARY KEY,
                                       plan_id INT,
                                       routine_id INT,
                                       planned_completion DATE,
                                       frequency ENUM('ONCE', 'DAILY', 'WEEKLY', 'BIWEEKLY', 'MONTHLY'),
+                                      `order` INT,
                                       FOREIGN KEY (plan_id) REFERENCES training_plan(plan_id) ON DELETE CASCADE,
                                       FOREIGN KEY (routine_id) REFERENCES routine(routine_id) ON DELETE CASCADE
                                   );"""
-    pool.execute(create_routine_in_plan_table)
+    pool.execute(create_routine_training_plan_table)
 
     # Insert data
     add_excercises = """INSERT INTO exercise (name, description, category_type, body_part_focus, difficulty_level, equipment_needed) VALUES
