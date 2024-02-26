@@ -21,8 +21,8 @@ def seed():
     create_database()
 
     pool = ConnectionPool()
-    useDB = "USE fitness_progress_tracker;"
-    pool.execute(useDB)
+    use_db = "USE fitness_progress_tracker;"
+    pool.execute(use_db)
 
     # Create tables
     create_user_table = """CREATE TABLE user (
@@ -54,6 +54,7 @@ def seed():
     create_user_roles_table = """CREATE TABLE user_role (
                                 user_role_id INT AUTO_INCREMENT PRIMARY KEY,
                                 email VARCHAR(255),
+                                role_id INT,
                                 FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE,
                                 FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE CASCADE
                               );"""
@@ -76,6 +77,7 @@ def seed():
                                 name VARCHAR(255),
                                 description TEXT,
                                 routine_visibility ENUM('PUBLIC', 'PRIVATE'),
+                                created DATE,
                                 FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
                            );"""
     pool.execute(create_routine_table)
@@ -101,6 +103,29 @@ def seed():
                                         FOREIGN KEY (routine_id) REFERENCES routine(routine_id) ON DELETE CASCADE
                                 );"""
     pool.execute(create_routine_log_table)
+
+    # New tables
+    create_training_plan_table = """CREATE TABLE training_plan (
+                                    plan_id INT AUTO_INCREMENT PRIMARY KEY,
+                                    email VARCHAR(255),
+                                    name VARCHAR(255),
+                                    description TEXT,
+                                    training_plan_visibility ENUM('PUBLIC', 'PRIVATE'),
+                                    created DATE,
+                                    FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
+                                );"""
+    pool.execute(create_training_plan_table)
+
+    create_routine_in_plan_table = """CREATE TABLE routine_in_plan (
+                                      id INT AUTO_INCREMENT PRIMARY KEY,
+                                      plan_id INT,
+                                      routine_id INT,
+                                      planned_completion DATE,
+                                      frequency ENUM('ONCE', 'DAILY', 'WEEKLY', 'BIWEEKLY', 'MONTHLY'),
+                                      FOREIGN KEY (plan_id) REFERENCES training_plan(plan_id) ON DELETE CASCADE,
+                                      FOREIGN KEY (routine_id) REFERENCES routine(routine_id) ON DELETE CASCADE
+                                  );"""
+    pool.execute(create_routine_in_plan_table)
 
     # Insert data
     add_excercises = """INSERT INTO exercise (name, description, category_type, body_part_focus, difficulty_level, equipment_needed) VALUES
