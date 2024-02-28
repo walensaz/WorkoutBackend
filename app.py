@@ -108,10 +108,10 @@ def create_app():
 
     api.add_resource(
         resources.routines.RoutineCRUD.RoutineCRUD, 
-        '/modify-routines', 
-        '/modify-routines/',
-        '/modify-routines/<routine_id>',
-        '/modify-routines/<routine_id1>/'
+        '/routines', 
+        '/routines/',
+        '/routines/<routine_id>',
+        '/routines/<routine_id1>/'
     )
 
     return app
