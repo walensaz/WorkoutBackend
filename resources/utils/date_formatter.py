@@ -1,3 +1,7 @@
+import datetime
+
 def convert_date(row):
-    row['date'] = row['date'].strftime('%Y-%m-%d')
+    for key, value in row.items():
+        if isinstance(value, datetime.date):
+            row[key] = value.strftime('%Y-%m-%d')
     return row

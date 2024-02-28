@@ -15,7 +15,7 @@ import resources.Users
 import resources.ExerciseDetail
 import resources.routines.RoutineDetail
 import resources.routines.CompletedRoutines
-import resources.routines.ModifyRoutines
+import resources.routines.RoutineCRUD
 
 from flask_mail import Mail
 
@@ -107,7 +107,7 @@ def create_app():
     )
 
     api.add_resource(
-        resources.routines.ModifyRoutines.ModifyRoutines, 
+        resources.routines.RoutineCRUD.RoutineCRUD, 
         '/modify-routines', 
         '/modify-routines/',
         '/modify-routines/<routine_id>',
