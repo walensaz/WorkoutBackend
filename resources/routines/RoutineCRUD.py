@@ -13,7 +13,8 @@ class RoutineCRUD(Resource):
 
         try:
             query_routines = """SELECT routine_id, name, description, visibility, created 
-                                FROM routine WHERE email = %s;"""
+                                FROM routine WHERE email = %s
+                                ORDER BY created DESC;"""
             routines_result = pool.execute(query_routines, (email,))
 
             if not routines_result['rows']:
@@ -28,7 +29,7 @@ class RoutineCRUD(Resource):
                                     FROM routine_exercise re
                                     INNER JOIN exercise e ON re.exercise_id = e.exercise_id
                                     WHERE re.routine_id = %s
-                                    ORDER BY re.order;"""
+                                    ORDER BY re.order ASC;"""
                 exercises_result = pool.execute(query_exercises, (routine['routineId'],))
 
                 exercises = list(map(convert_date, convert_keys(exercises_result["rows"])))
