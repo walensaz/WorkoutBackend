@@ -7,15 +7,14 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 from flask_cors import CORS
 
-import resources.auth.Login
-import resources.auth.ForgotPassword
-import resources.auth.ResetPassword
-import resources.auth.Register
-import resources.Users
-import resources.ExerciseDetail
-import resources.routines.RoutineDetail
-import resources.routines.CompletedRoutines
-import resources.routines.RoutineCRUD
+import resources.auth.login
+import resources.auth.forgot_password
+import resources.auth.reset_password
+import resources.auth.register
+import resources.users
+import resources.exercises.exercise_detail
+import resources.routines.completed_routines
+import resources.routines.routine_crud
 
 from flask_mail import Mail
 
@@ -58,56 +57,49 @@ def create_app():
     # API endpoints and the associated class.
     # Allow '/' at the end of the endpoint.
     api.add_resource(
-        resources.auth.Register.Register, 
+        resources.auth.register.Register, 
         '/register', 
         '/register/'
     )
 
     api.add_resource(
-        resources.auth.Login.Login, 
+        resources.auth.login.Login, 
         '/login', 
         '/login/'
     )
 
     api.add_resource(
-        resources.auth.ForgotPassword.ForgotPassword, 
+        resources.auth.forgot_password.ForgotPassword, 
         '/forgot-password', 
         '/forgot-password/'
     )
 
     api.add_resource(
-        resources.auth.ResetPassword.ResetPassword, 
+        resources.auth.reset_password.ResetPassword, 
         '/reset-password/<token>', 
         '/reset-password/<token>/'
     )
 
     api.add_resource(
-        resources.Users.Users, 
+        resources.users.Users, 
         '/users',
         '/users/'
     )
 
     api.add_resource(
-        resources.ExerciseDetail.ExerciseDetail,
+        resources.exercises.exercise_detail.ExerciseDetail,
         '/exercise-details/<exercise_id>', 
         '/exercise-details/<exercise_id>/'
     )
-
-    api.add_resource(
-        resources.routines.RoutineDetail.RoutineDetail,
-        '/routine-details/<routine_id>', 
-        '/routine-details/<routine_id>/'
-    )
-
     
     api.add_resource(
-        resources.routines.CompletedRoutines.CompletedRoutines, 
+        resources.routines.completed_routines.CompletedRoutines, 
         '/completed-routines', 
         '/completed-routines/'
     )
 
     api.add_resource(
-        resources.routines.RoutineCRUD.RoutineCRUD, 
+        resources.routines.routine_crud.RoutineCRUD, 
         '/routines', 
         '/routines/',
         '/routines/<routine_id>',
