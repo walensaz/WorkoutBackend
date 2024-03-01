@@ -58,12 +58,8 @@ class RoutineCRUD(Resource):
 
         if not name:
             return {'message': 'Missing field: name'}, 400
-        if not description:
-            return {'message': 'Missing field: description'}, 400
         if not visibility:
             return {'message': 'Missing field: visibility'}, 400
-        if not exercises:
-            return {'message': 'Missing field: exercises'}, 400
 
         try:
             query = """INSERT INTO routine (email, name, description, visibility, created) 
@@ -72,29 +68,30 @@ class RoutineCRUD(Resource):
 
             routine_id = result['last_insert_id']
 
-            for exercise in exercises:
-                if not exercise.get('exerciseId'):
-                    return {'message': 'Missing field: exerciseId'}, 400
-                if not exercise.get('order'):
-                    return {'message': 'Missing field: order'}, 400
-                if not exercise.get('repetitions'):
-                    return {'message': 'Missing field: repetitions'}, 400
-                if not exercise.get('sets'):
-                    return {'message': 'Missing field: sets'}, 400
-                if not exercise.get('restingTime'):
-                    return {'message': 'Missing field: restingTime'}, 400
+            if exercises:
+                for exercise in exercises:
+                    if not exercise.get('exerciseId'):
+                        return {'message': 'Missing field: exerciseId'}, 400
+                    if not exercise.get('order') and exercise.get('order') != 0:
+                        return {'message': 'Missing field: order'}, 400
+                    if not exercise.get('repetitions'):
+                        return {'message': 'Missing field: repetitions'}, 400
+                    if not exercise.get('sets'):
+                        return {'message': 'Missing field: sets'}, 400
+                    if not exercise.get('restingTime'):
+                        return {'message': 'Missing field: restingTime'}, 400
 
-                query = """INSERT INTO routine_exercise (routine_id, exercise_id, `order`, repetitions, sets, resting_time)
-                        VALUES (%s, %s, %s, %s, %s, %s);"""
+                    query = """INSERT INTO routine_exercise (routine_id, exercise_id, `order`, repetitions, sets, resting_time)
+                            VALUES (%s, %s, %s, %s, %s, %s);"""
 
-                result = pool.execute(query, (
-                    routine_id, 
-                    exercise['exerciseId'], 
-                    exercise['order'], 
-                    exercise['repetitions'], 
-                    exercise['sets'], 
-                    exercise['restingTime']
-                ))
+                    result = pool.execute(query, (
+                        routine_id, 
+                        exercise['exerciseId'], 
+                        exercise['order'], 
+                        exercise['repetitions'], 
+                        exercise['sets'], 
+                        exercise['restingTime']
+                    ))
 
             if result['message']:
                 return {'message': result['message']}, 500
@@ -116,12 +113,8 @@ class RoutineCRUD(Resource):
 
         if not name:
             return {'message': 'Missing field: name'}, 400
-        if not description:
-            return {'message': 'Missing field: description'}, 400
         if not visibility:
             return {'message': 'Missing field:: visibility'}, 400
-        if not exercises:
-            return {'message': 'Missing field: exercises'}, 400
 
         try:
             query = "SELECT * FROM routine WHERE routine_id = %s AND email = %s;"
@@ -139,29 +132,30 @@ class RoutineCRUD(Resource):
             query = "DELETE FROM routine_exercise WHERE routine_id = %s;"
             result = pool.execute(query, (routine_id,))
 
-            for exercise in exercises:
-                if not exercise.get('exerciseId'):
-                    return {'message': 'Missing field: exerciseId'}, 400
-                if not exercise.get('order'):
-                    return {'message': 'Missing field: order'}, 400
-                if not exercise.get('repetitions'):
-                    return {'message': 'Missing field: repetitions'}, 400
-                if not exercise.get('sets'):
-                    return {'message': 'Missing field: sets'}, 400
-                if not exercise.get('restingTime'):
-                    return {'message': 'Missing field: restingTime'}, 400
-                
-                query = """INSERT INTO routine_exercise (routine_id, exercise_id, `order`, repetitions, sets, resting_time)
-                        VALUES (%s, %s, %s, %s, %s, %s);"""
-                
-                result = pool.execute(query, (
-                    routine_id, 
-                    exercise['exerciseId'], 
-                    exercise['order'], 
-                    exercise['repetitions'], 
-                    exercise['sets'], 
-                    exercise['restingTime']
-                ))
+            if exercises:
+                for exercise in exercises:
+                    if not exercise.get('exerciseId'):
+                        return {'message': 'Missing field: exerciseId'}, 400
+                    if not exercise.get('order') and exercise.get('order') != 0:
+                        return {'message': 'Missing field: order'}, 400
+                    if not exercise.get('repetitions'):
+                        return {'message': 'Missing field: repetitions'}, 400
+                    if not exercise.get('sets'):
+                        return {'message': 'Missing field: sets'}, 400
+                    if not exercise.get('restingTime'):
+                        return {'message': 'Missing field: restingTime'}, 400
+                    
+                    query = """INSERT INTO routine_exercise (routine_id, exercise_id, `order`, repetitions, sets, resting_time)
+                            VALUES (%s, %s, %s, %s, %s, %s);"""
+                    
+                    result = pool.execute(query, (
+                        routine_id, 
+                        exercise['exerciseId'], 
+                        exercise['order'], 
+                        exercise['repetitions'], 
+                        exercise['sets'], 
+                        exercise['restingTime']
+                    ))
             
             if result['message']:
                 return {'message': result['message']}, 500
