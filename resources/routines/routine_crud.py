@@ -4,6 +4,7 @@ from flask_restful import Resource, request
 from models.ConnectionPool import ConnectionPool
 from resources.utils.date_formatter import convert_date
 from resources.utils.typescript_formatter import convert_keys
+from resources.routines.routine_detail import RoutineDetail
 
 class RoutineCRUD(Resource):
     @jwt_required()
@@ -95,8 +96,8 @@ class RoutineCRUD(Resource):
 
             if result['message']:
                 return {'message': result['message']}, 500
-            
-            return {'message': 'Routine added successfully'}, 201
+        
+            return convert_keys({'routine_id': routine_id}), 201
         except Exception as e:
             return {'message': f'Error adding routine: {e}'}, 500
 
@@ -160,7 +161,7 @@ class RoutineCRUD(Resource):
             if result['message']:
                 return {'message': result['message']}, 500
             
-            return {'message': 'Routine updated successfully'}, 200
+            return convert_keys({'routine_id': routine_id}), 200
         except Exception as e:
             return {'message': f'Error updating routine: {e}'}, 500
 
@@ -177,6 +178,6 @@ class RoutineCRUD(Resource):
             if result['affected'] == 0:
                 return {'message': 'No routine found to delete'}, 404
             
-            return {'message': 'Routine deleted successfully'}, 200
+            return convert_keys({'routine_id': routine_id}), 200
         except Exception as e:
             return {'message': f'Error deleting routine: {e}'}, 500
