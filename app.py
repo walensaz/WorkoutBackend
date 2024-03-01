@@ -12,6 +12,7 @@ import resources.auth.forgot_password
 import resources.auth.reset_password
 import resources.auth.register
 import resources.users
+import resources.exercises.exercise_crud
 import resources.exercises.exercise_detail
 import resources.routines.completed_routines
 import resources.routines.routine_crud
@@ -85,6 +86,12 @@ def create_app():
         resources.users.Users, 
         '/users',
         '/users/'
+    )
+
+    api.add_resource(
+        resources.exercises.exercise_crud.ExerciseCRUD, 
+        '/exercises', 
+        '/exercises/'
     )
 
     api.add_resource(
