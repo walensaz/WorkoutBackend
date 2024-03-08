@@ -25,6 +25,5 @@ class ExerciseDetail(Resource):
                 return completed_routines, 200
             else:
                 return {'message': 'No completed routines found for the specified month and year'}, 404
-            return convert_keys(result["rows"][0]), 200
         except Exception as e:
             return {"message": f"Failed. Error: {e}"}, 500

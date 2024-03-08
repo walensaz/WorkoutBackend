@@ -97,7 +97,7 @@ class RoutineCRUD(Resource):
             if result['message']:
                 return {'message': result['message']}, 500
         
-            return convert_keys({'routine_id': routine_id}), 201
+            return RoutineDetail.get(self, routine_id)
         except Exception as e:
             return {'message': f'Error adding routine: {e}'}, 500
 
@@ -161,7 +161,7 @@ class RoutineCRUD(Resource):
             if result['message']:
                 return {'message': result['message']}, 500
             
-            return convert_keys({'routine_id': routine_id}), 200
+            return RoutineDetail.get(self, routine_id)
         except Exception as e:
             return {'message': f'Error updating routine: {e}'}, 500
 
@@ -171,6 +171,8 @@ class RoutineCRUD(Resource):
         pool = ConnectionPool()
         email = get_jwt_identity().get('email')
 
+        routine = RoutineDetail.get(self, routine_id)
+
         try:
             query = "DELETE FROM routine WHERE routine_id = %s AND email = %s;"
             result = pool.execute(query, (routine_id, email))
@@ -178,6 +180,6 @@ class RoutineCRUD(Resource):
             if result['affected'] == 0:
                 return {'message': 'No routine found to delete'}, 404
             
-            return convert_keys({'routine_id': routine_id}), 200
+            return routine
         except Exception as e:
             return {'message': f'Error deleting routine: {e}'}, 500
