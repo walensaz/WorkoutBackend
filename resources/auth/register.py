@@ -32,8 +32,8 @@ class Register(Resource):
             return {'message': user_result['message']}, 500
 
         # Insert into user_profile table
-        profile_insert_query = "INSERT INTO user_profile (email, first_name, last_name) VALUES (%s, %s, %s)"
-        profile_result = pool.execute(profile_insert_query, (email, first_name, last_name))
+        profile_insert_query = "INSERT INTO user_profile (email, first_name, last_name, visibility) VALUES (%s, %s, %s, %s)"
+        profile_result = pool.execute(profile_insert_query, (email, first_name, last_name, "PRIVATE"))
 
         if profile_result['message']: 
             return {'message': profile_result['message']}, 500

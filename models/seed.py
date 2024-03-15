@@ -40,7 +40,7 @@ def seed():
                                     gender VARCHAR(50),
                                     visibility ENUM('PUBLIC', 'PRIVATE'),
                                     bio TEXT,
-                                    avatar BLOB,
+                                    avatar LONGBLOB,
                                     FOREIGN KEY (email) REFERENCES user(email) ON DELETE CASCADE
                                 );"""
     pool.execute(create_user_profile_table)
