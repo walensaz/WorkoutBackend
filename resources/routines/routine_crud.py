@@ -139,12 +139,13 @@ class RoutineCRUD(Resource):
                         return {'message': 'Missing field: exerciseId'}, 400
                     if not exercise.get('order') and exercise.get('order') != 0:
                         return {'message': 'Missing field: order'}, 400
-                    if not exercise.get('repetitions'):
-                        return {'message': 'Missing field: repetitions'}, 400
-                    if not exercise.get('sets'):
-                        return {'message': 'Missing field: sets'}, 400
-                    if not exercise.get('restingTime'):
-                        return {'message': 'Missing field: restingTime'}, 400
+                    # Allow these fields to be empty because they are not required.
+                    # if not exercise.get('repetitions'):
+                    #     return {'message': 'Missing field: repetitions'}, 400
+                    # if not exercise.get('sets'):
+                    #     return {'message': 'Missing field: sets'}, 400
+                    # if not exercise.get('restingTime'):
+                    #     return {'message': 'Missing field: restingTime'}, 400
                     
                     query = """INSERT INTO routine_exercise (routine_id, exercise_id, `order`, repetitions, sets, resting_time)
                             VALUES (%s, %s, %s, %s, %s, %s);"""
@@ -153,9 +154,9 @@ class RoutineCRUD(Resource):
                         routine_id, 
                         exercise['exerciseId'], 
                         exercise['order'], 
-                        exercise['repetitions'], 
-                        exercise['sets'], 
-                        exercise['restingTime']
+                        exercise['repetitions'] if exercise.get('repetitions') else None, 
+                        exercise['sets'] if exercise.get('sets') else None, 
+                        exercise['restingTime'] if exercise.get('restingTime') else None
                     ))
             
             if result['message']:
