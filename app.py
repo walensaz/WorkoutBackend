@@ -11,7 +11,8 @@ import resources.auth.login
 import resources.auth.forgot_password
 import resources.auth.reset_password
 import resources.auth.register
-import resources.users
+import resources.users.user_detail
+import resources.users.user_crud
 import resources.exercises.exercise_crud
 import resources.exercises.exercise_detail
 import resources.routines.completed_routines
@@ -83,9 +84,15 @@ def create_app():
     )
 
     api.add_resource(
-        resources.users.Users, 
-        '/users',
+        resources.users.user_crud.UserCRUD, 
+        '/users', 
         '/users/'
+    )
+
+    api.add_resource(
+        resources.users.user_detail.UserDetail, 
+        '/user-details',
+        '/user-details/'
     )
 
     api.add_resource(
